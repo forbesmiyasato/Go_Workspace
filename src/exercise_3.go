@@ -9,9 +9,9 @@ import (
 	"time"
 )
 
-func printArray(num int, array []int) {
+func printArray(array []int) {
 	for _, value := range array {
-		fmt.Println(num, value)
+		fmt.Println(value)
 	}
 }
 
@@ -19,8 +19,12 @@ func getRandomArray(size int) []int {
 	randomIntArray := make([]int, size)
 	min := math.MinInt32
 	max := math.MaxInt32
+	// seed := rand.NewSource(time.Now().UnixNano())
+	seed := rand.NewSource(0)
+	random := rand.New(seed)
+
 	for i := 0; i < size; i++ {
-		randomIntArray[i] = min + rand.Intn(max-min)
+		randomIntArray[i] = min + random.Intn(max-min)
 	}
 
 	return randomIntArray
@@ -143,16 +147,16 @@ func main() {
 		case "default":
 			defaultSort(unsortedArray)
 			out = true
-			fmt.Println("Is sorted", sort.IntsAreSorted(unsortedArray))
 		case "partition":
 			partitionSort(unsortedArray)
 			out = true
-			fmt.Println("Is sorted", sort.IntsAreSorted(unsortedArray))
 		default:
-			fmt.Println("Invalid sort method")
+			fmt.Println("Invalid sort method (default or partition)")
 		}
 
 		if out {
+			fmt.Println("Is sorted", sort.IntsAreSorted(unsortedArray))
+			// printArray(unsortedArray)
 			break
 		}
 	}
