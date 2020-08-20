@@ -9,6 +9,15 @@ import (
 	"time"
 )
 
+func getExecutionTime(unsortedArray []int, sortMethod func([]int)) {
+	beforeSort := time.Now()
+
+	sortMethod(unsortedArray)
+
+	sortDuration := time.Since(beforeSort)
+	fmt.Println(sortDuration)
+}
+
 func printArray(array []int) {
 	for _, value := range array {
 		fmt.Println(value)
@@ -31,14 +40,7 @@ func getRandomArray(size int) []int {
 }
 
 func defaultSort(unsortedArray []int) {
-	beforeSort := time.Now()
 	sort.Ints(unsortedArray[:])
-	// for _, value := range unsortedArray {
-	// 	fmt.Println(value)
-	// }
-	// fmt.Println(runtime.NumGoroutine())
-	sortDuration := time.Since(beforeSort)
-	fmt.Println(sortDuration)
 }
 
 func partitionSort(unsortedArray []int) {
@@ -59,8 +61,6 @@ func partitionSort(unsortedArray []int) {
 	partition2 := unsortedArray[partition2Start:partition2End]
 	partition3 := unsortedArray[partition3Start:partition3End]
 	partition4 := unsortedArray[partition4Start:partition4End]
-
-	beforeSort := time.Now()
 
 	wg := sync.WaitGroup{}
 
@@ -83,10 +83,6 @@ func partitionSort(unsortedArray []int) {
 
 	wg.Add(1)
 	mergeSortedArrays(unsortedArray, newPartition1, newPartition2, partition1Start, &wg)
-
-	// printArray(0, unsortedArray)
-	sortDuration := time.Since(beforeSort)
-	fmt.Println(sortDuration)
 }
 
 func mergeSortedArrays(originalArray []int, array1 []int, array2 []int, originalArrayStart int, wg *sync.WaitGroup) {
@@ -132,6 +128,10 @@ func sortArray(array []int, wg *sync.WaitGroup) {
 	defer wg.Done()
 }
 
+func mergeSort(unsortedArray []int) {
+	copy(unsortedArray, MergeSortMulti(unsortedArray))
+}
+
 func main() {
 	var arrayLength int
 	var sortMethod string
@@ -145,10 +145,13 @@ func main() {
 		fmt.Scanln(&sortMethod)
 		switch sortMethod {
 		case "default":
-			defaultSort(unsortedArray)
+			getExecutionTime(unsortedArray, defaultSort)
 			out = true
 		case "partition":
-			partitionSort(unsortedArray)
+			getExecutionTime(unsortedArray, partitionSort)
+			out = true
+		case "merge":
+			getExecutionTime(unsortedArray, mergeSort)
 			out = true
 		default:
 			fmt.Println("Invalid sort method (default or partition)")
