@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-//Merge ....
+//Merge sort multithread code from: https://gist.github.com/orcaman/10f28840ce56903173b5df6a5c365110#file-msort-go
 func Merge(l, r []int) []int {
 	ret := make([]int, 0, len(l)+len(r))
 	for len(l) > 0 || len(r) > 0 {
